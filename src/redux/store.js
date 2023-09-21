@@ -1,9 +1,31 @@
 import { configureStore } from '@reduxjs/toolkit';
-//import { createAction, createReducer } from '@reduxjs/toolkit';
 
-import counterReducer from './counterSlice';
-//const myReducer = createReducer(10, {});
+import {
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
+
+import { contactsReducer } from './contactSlice';
+import { filterReducer } from './filtersSlice';
 
 export const store = configureStore({
-  reducer: counterReducer,
+  reducer: {
+    contacts: contactsReducer,
+    filter: filterReducer,
+  },
+
+  //*** */
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoreActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
+
+export const persistor = persistStore(store);

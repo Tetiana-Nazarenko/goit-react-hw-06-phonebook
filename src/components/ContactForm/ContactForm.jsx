@@ -1,4 +1,9 @@
 import { useState } from 'react';
+import { nanoid } from '@reduxjs/toolkit';
+import { useSelector, useDispatch } from 'react-redux';
+import { getVisibleContacts } from 'redux/selectors';
+
+import { addContact } from 'redux/contactSlice';
 
 import {
   Form,
@@ -7,13 +12,21 @@ import {
   ButtonAddContact,
 } from './ContactForm.styled';
 
-export const ContactForm = ({ onSubmit }) => {
+const nameInputId = nanoid();
+const numberInputId = nanoid();
+
+export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const contacts = useSelector(getVisibleContacts);
+  const dispatch = useDispatch();
+
   //*** */
 
   const handleChange = e => {
     const { name, value } = e.target;
+
     if (name === 'name') {
       setName(value);
     } else if (name === 'number') {
@@ -24,14 +37,26 @@ export const ContactForm = ({ onSubmit }) => {
   const handleSubmit = event => {
     event.preventDefault();
 
-    onSubmit({
-      name: name,
-      number: number,
-    });
-    reset();
-  };
+    // onSubmit({
+    //   name: name,
+    //   number: number,
+    // });
+    //reset();
 
-  const reset = () => {
+    // const form = event.target;
+    // const formName = event.target.elements.name.value;
+    // const formNumber = event.target.elements.number.value;
+
+    const isInContacts = contacts.some(
+      contact => contact.name.toLowerCase().trim() === name.toLowerCase().trim()
+    );
+
+    if (isInContacts) {
+      alert(`${name} is already in contacts!`);
+      return;
+    }
+
+    dispatch(addContact({ name, number }));
     setName('');
     setNumber('');
   };
@@ -39,7 +64,7 @@ export const ContactForm = ({ onSubmit }) => {
   //*** */
   return (
     <Form onSubmit={handleSubmit}>
-      <LabelTitle>
+      <LabelTitle htmlFor={nameInputId}>
         Name:
         <Input
           type="text"
@@ -52,7 +77,7 @@ export const ContactForm = ({ onSubmit }) => {
         />
       </LabelTitle>
 
-      <LabelTitle>
+      <LabelTitle htmlFor={numberInputId}>
         Number:
         <Input
           type="tel"
