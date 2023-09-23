@@ -52,21 +52,12 @@ export const App = () => {
   return (
     <Layout>
       <HeadTitle>Phonebook</HeadTitle>
-      <ContactForm
-      // onSubmit={addContact}
-      />
+      <ContactForm />
 
       <ContactsTitle>Contacts</ContactsTitle>
 
-      <Filter
-      // value={filter} onChangeFilter={handleFilter}
-      />
+      <Filter />
       <Contacts />
-
-      {/* //contacts={filterContacts} onDelete={handleDelete} */}
-
-      {/* {defaulContacts} */}
-
       <GlobalStyle />
     </Layout>
   );
